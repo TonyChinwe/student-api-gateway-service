@@ -1,0 +1,36 @@
+server:
+  port: 9191
+
+spring:
+  application:
+    name: STUDENT-API-GATEWAY
+
+
+  cloud:
+    gateway:
+      routes:
+        - id: STUDENT-READ-SERVICE
+          uri: lb://STUDENT-READ-SERVICE
+          predicates:
+            - Path=/read/**
+          filters:
+          - name: CircuitBreaker
+            args:
+              name: STUDENT-READ-SERVICE
+              fallbackuri: forward:/read-service-fallback
+
+
+        - id: STUDENT-WRITE-SERVICE
+          uri: lb://STUDENT-WRITE-SERVICE
+          predicates:
+            - Path=/write/**
+          filters:
+          - name: CircuitBreaker
+            args:
+              name: STUDENT-WRITE-SERVICE
+              fallbackuri: forward:/write-service-fallback
+
+
+
+
+
